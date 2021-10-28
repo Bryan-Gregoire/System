@@ -15,7 +15,9 @@ Les tâches sont les suivantes (les liens peuvent changer en fonction de l'endro
 Le mieux serait d'utiliser des clés SSH entre deux machines pour pouvoir faire la sauvegarde autrepart.
 
 Pour se faire, il faut exécuter les commandes suivantes :
-**[En cours...]**
+1) Sur la machine de sauvegarde : `ssh-keygen -t ed25519` et ensuite appuyer plusieurs fois sur la touche " Entrer ".
+2) Sur la machine de sauvegarde : `ssh-copy-id <username>@<hostname> -p <port>` et entrer le mot de passe de <username> sur <hostname>.
 
+Dès lors, les deux machines sont liées et la machine de sauvegarde peut se connecter sur la machine avec les données sans entrer le mot de passe via la commande `ssh -p '<port>' '<username>@<hostname>'`
 
-
+Il faut mettre à jour les tâches automatiques dans le serveur de sauvegarde et y rajouter également les tâches cront en modifiant le chemin du script s'il change.
