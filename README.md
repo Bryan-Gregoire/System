@@ -1,7 +1,27 @@
+# Vocabulaires
+- Machine de sauvegarde : serveur dans lequel sera stocké les sauvegardes.
+- Machine de production : serveur dans lequel se trouve toutes les données à sauvegarder.
+
 # Installations
 
-Il faut ajouter des tâches automatiques (cront) via la commande " crontab -e ".
-Les tâches sont les suivantes (les liens peuvent changer en fonction de l'endroit où se trouve le script dans la machine) :
+## Faire son choix de sauvegarde :
+- Sauvegardes installées sur la même machine qu'où se trouvent les données :
+    + Il suffit d'ajouter le script " **backupSameMachine.sh** " dans la machine de production, si les sauvegardes doivent être dans la même machine.
+- Sauvegardes installées sur une machine différente que celle où se trouvent les données (*conseillé*) :
+    + Si vous voulez utiliser deux machines différentes (machine de sauvegarde + production), il faudra déplacer le script " **backup.sh** " sur la machine de sauvegarde.
+    + Il faudra créer une clé SSH et la partager (voir la section " Clés SSH ").
+
+## Modifier le script :
+Dans ces deux scripts, il faut modifier avec la partie " **PARTIE A MODIFIER** " avec les données suivantes :
+- `path_project="<project_path>"` : *chemin vers les données sur la machine de production*
+- `path_saves="<saves_path>"` : *chemin vers le dossier où seront créés les dossiers (lundi, mardi, ...) avec les sauvegardes sur la même machine [**backupSameMachine.sh**] ou sur la machine distante [**backup.sh**]*
+- [uniquement pour backup.sh] `port=<port>` : *port de la machine de production*
+- [uniquement pour backup.sh] `user="<server>"` : *utilisateur ayant accès aux données de production*
+- [uniquement pour backup.sh] `server="<hostname>"` : *adresse du serveur de production*
+
+## Ajouter les tâches automatiques :
+Il faut ajouter des tâches automatiques (cront) via la commande " `crontab -e` " sur la machine de sauvegarde.
+Les tâches sont les suivantes (les liens peuvent changer en fonction de l'endroit où se trouve le script dans la machine et de quel script vous utilisez (**backup.sh** ou **backupsSameMachine.sh**)) :
 
 ```bash
 00 04 * * 1 bash /home/servers/sysg5/saves/backup.sh lundi # Execute le script le lundi à 4h00
@@ -12,12 +32,20 @@ Les tâches sont les suivantes (les liens peuvent changer en fonction de l'endro
 00 04 * * 6 bash /home/servers/sysg5/saves/backup.sh samedi # Execute le script le samedi à 4h00
 00 04 * * 7 bash /home/servers/sysg5/saves/backup.sh dimanche # Execute le script le dimanche à 4h00
 ```
-Le mieux serait d'utiliser des clés SSH entre deux machines pour pouvoir faire la sauvegarde autrepart.
 
-Pour se faire, il faut exécuter les commandes suivantes :
-1) Sur la machine de sauvegarde : `ssh-keygen -t ed25519` et ensuite appuyer plusieurs fois sur la touche " Entrer ".
-2) Sur la machine de sauvegarde : `ssh-copy-id <username>@<hostname> -p <port>` et entrer le mot de passe de <username> sur <hostname>.
+## [backup.sh] Clés SSH :
+Le mieux serait d'utiliser des clés SSH entre deux machines pour pouvoir faire la sauvegarde autrepart. Grâce à ça, si la machine de production a un soucis (par exemple, se fait hacker), les sauvegardes seront toujours protégées et le hacker ne pourra pas remonter vers la machine de sauvegarde.
 
-Dès lors, les deux machines sont liées et la machine de sauvegarde peut se connecter sur la machine avec les données sans entrer le mot de passe via la commande `ssh -p '<port>' '<username>@<hostname>'`
+Pour se faire, il faut créer une clé SSH sur la machine de sauvegarde et partager sa clé publique sur la machine de production. Ca permettra de se connecter depuis la machine de sauvegarde à la machine de production, mais sans mot de passe : ce qui est nécessaire pour la commande `rsync` (permet de créer les sauvegardes) qui ne peut pas se connecter à une machine distante avec un mot de passe.
 
-Il faut mettre à jour les tâches automatiques dans le serveur de sauvegarde et y rajouter également les tâches cront en modifiant le chemin du script s'il change.
+Pour créer et partager la clé, faites les commandes suivantes sur la machine de sauvegarde :
+1) `ssh-keygen -t ed25519` et ensuite appuyer plusieurs fois sur la touche " Entrer " pour créer une clé SSH.
+2) `ssh-copy-id <username>@<hostname> -p <port>` et entrer le mot de passe de <username> sur <hostname> (machine de production).
+
+Dès lors, les deux machines sont liées : la machine de sauvegarde peut se connecter sur la machine de production avec le <username>, <hostname> et <port>, mais sans entrer le mot de passe via la commande `ssh -p '<port>' '<username>@<hostname>'`.
+
+Le plus dur est fait ! Maintenant, il faut vérifier que dans les tâches cront, le script utilisé est bien " backup.sh " et que les informations de connexion sont bien modifiées dans le script.
+
+# Utilisation
+
+Rien de plus facile : tout se fait tout seul ! En effet, les tâches " cron " permettent de rendre ces tâches automatiques. Tous les jours, à 4h du matin, une ligne du cron sera executée afin de créer le backup.
