@@ -11,13 +11,11 @@
     + Si vous voulez utiliser deux machines différentes (machine de sauvegarde + production), il faudra déplacer le script " **backup.sh** " sur la machine de sauvegarde.
     + Il faudra créer une clé SSH et la partager (voir la section " Clés SSH ").
 
-## Modifier le script :
-Dans ces deux scripts, il faut modifier avec la partie " **PARTIE A MODIFIER** " avec les données suivantes :
-- `path_project="<project_path>"` : *chemin vers les données sur la machine de production*
-- `path_saves="<saves_path>"` : *chemin vers le dossier où seront créés les dossiers (lundi, mardi, ...) avec les sauvegardes sur la même machine [**backupSameMachine.sh**] ou sur la machine distante [**backup.sh**]*
-- [uniquement pour backup.sh] `port=<port>` : *port de la machine de production*
-- [uniquement pour backup.sh] `user="<server>"` : *utilisateur ayant accès aux données de production*
-- [uniquement pour backup.sh] `server="<hostname>"` : *adresse du serveur de production*
+## Configuration :
+- Installez le script " install.sh " au même niveau que le script " backup.sh " ou " backupSameMachine.sh ".
+- Donnez lui les droits d'exécution avec `chmod +x install.sh`
+- Exécutez-le `./install.sh` et répondez aux questions (chemin de sauvegarde, chemin des données, port, utilisateur, ip, ...). Toutes ces données seront stockées dans le script de backup automatiquement.
+- Une fois validé, vous pouvez supprimer le script " install.sh ".
 
 ## Ajouter les tâches automatiques :
 Il faut ajouter des tâches automatiques (cront) via la commande " `crontab -e` " sur la machine de sauvegarde.

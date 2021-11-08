@@ -7,8 +7,8 @@
 path_project="<project_path>" # chemin vers les données sur la machine de production
 path_saves="<saves_path>" # chemin vers le dossier où seront créés les dossiers (lundi, mardi, ...) avec les sauvegardes sur la même machine [backupSameMachine.sh] ou sur la machine distante [backup.sh]
 port=<port> # port de la machine de production
-user="<server>" # utilisateur ayant accès aux données de production
-server="<hostname>" # adresse du serveur de production
+user="<user>" # utilisateur ayant accès aux données de production
+ip="<ip>" # adresse du serveur de production
 
 ##################################################
 # FIN DE LA PARTIE A MODIFIER
@@ -26,4 +26,4 @@ echo `date +%d-%m-%Y`'-'`date +%H`'h'`date +%M`' : ' >> $path_saves/errors.log
 # -progress = donne les informations exactes pendant la progression du transfert.
 
 # redirige le retour de la commande dans status.log (>>) et les erreurs dans errors.log (2>>).
-rsync -avz -e "ssh -p $port" --delete --progress $user@$server:$path_project/* $path_saves/$1 >> $path_saves/status.log 2>> $path_saves/errors.log
+rsync -avz -e "ssh -p $port" --delete --progress $user@$ip:$path_project/* $path_saves/$1 >> $path_saves/status.log 2>> $path_saves/errors.log
