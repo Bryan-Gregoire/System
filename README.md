@@ -12,7 +12,7 @@
     + Il faudra créer une clé SSH et la partager (voir la section " Clés SSH ").
 
 ## Configuration :
-- Installez le script " install.sh " au même niveau que le script " backup.sh " ou " backupSameMachine.sh ".
+- Copiez le script " install.sh " au même niveau que le script " backup.sh " ou " backupSameMachine.sh ".
 - Donnez lui les droits d'exécution avec `chmod +x install.sh`
 - Exécutez-le `./install.sh` et répondez aux questions (chemin de sauvegarde, chemin des données, port, utilisateur, ip, ...). Toutes ces données seront stockées dans le script de backup automatiquement.
 - Une fois validé, vous pouvez supprimer le script " install.sh ".
@@ -38,9 +38,9 @@ Pour se faire, il faut créer une clé SSH sur la machine de sauvegarde et parta
 
 Pour créer et partager la clé, faites les commandes suivantes sur la machine de sauvegarde :
 1) `ssh-keygen -t ed25519` et ensuite appuyer plusieurs fois sur la touche " Entrer " pour créer une clé SSH.
-2) `ssh-copy-id <username>@<hostname> -p <port>` et entrer le mot de passe de <username> sur <hostname> (machine de production).
-
-Dès lors, les deux machines sont liées : la machine de sauvegarde peut se connecter sur la machine de production avec le <username>, <hostname> et <port>, mais sans entrer le mot de passe via la commande `ssh -p '<port>' '<username>@<hostname>'`.
+2) `ssh-copy-id -i <chemin de la clé> <username>@<hostname> -p <port>` Le port par défaut est 22 et le chemin de la clé est en général ~/.ssh/id_ed25519, ensuite entrez le mot de passe de <username> sur <hostname> (machine de production).
+3) 
+Dès lors, les deux machines sont liées : la machine de sauvegarde peut se connecter sur la machine de production avec le protocal SSH `<username>`, `<hostname>` et `<port>`, mais sans entrer le mot de passe via la commande `ssh -p '<port>' '<username>@<hostname>'`.
 
 Le plus dur est fait ! Maintenant, il faut vérifier que dans les tâches cront, le script utilisé est bien " backup.sh " et que les informations de connexion sont bien modifiées dans le script.
 

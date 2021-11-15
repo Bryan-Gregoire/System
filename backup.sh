@@ -4,8 +4,8 @@
 # PARTIE A MODIFIER
 ##################################################
 
-path_project="<project_path>" # chemin vers les données sur la machine de production
-path_saves="<saves_path>" # chemin vers le dossier où seront créés les dossiers (lundi, mardi, ...) avec les sauvegardes sur la même machine [backupSameMachine.sh] ou sur la machine distante [backup.sh]
+path_project=<project_path> # chemin vers les données sur la machine de production
+path_saves=<saves_path> # chemin vers le dossier où seront créés les dossiers (lundi, mardi, ...) avec les sauvegardes sur la même machine [backupSameMachine.sh] ou sur la machine distante [backup.sh]
 port=<port> # port de la machine de production
 user="<user>" # utilisateur ayant accès aux données de production
 ip="<ip>" # adresse du serveur de production

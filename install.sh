@@ -42,8 +42,8 @@ do
     read ip
 
     # Echappe les / dans le code du sed sinon cela crée une erreur
-    project_path_esc=$(echo ${project_path} | sed -e 's/\//\\\//g')
-    saves_path_esc=$(echo ${saves_path} | sed -e 's/\//\\\//g')
+    project_path_esc=$(echo ${project_path} | sed -e 's/\//\\\//g' | sed -e 's/ /\\\ /g')
+    saves_path_esc=$(echo ${saves_path} | sed -e 's/\//\\\//g' | sed -e 's/ /\\\ /g')
 
     echo -e "${vertclair}Toutes les informations sont-elles correctes ? : ${neutre}"
     echo "- Chemin machine de production : $project_path"
@@ -69,12 +69,11 @@ done
 # Recherche dans le fichier ce qui est <> et le remplace par ce qui est après le /.
 # Le s veut dire depuis le début et le g veut dire toutes les itérations.
 # -i : modifie dans le fichier même
-# '.bak' : comptabilité avec MacOS
 
-sed -i '.bak' "s/<ip>/$ip/g" $file
-sed -i '.bak' "s/<user>/$user/g" $file
-sed -i '.bak' "s/<project_path>/$project_path_esc/g" $file
-sed -i '.bak' "s/<saves_path>/$saves_path_esc/g" $file
-sed -i '.bak' "s/<port>/$port/g" $file
+sed -i "s/<ip>/$ip/g" $file
+sed -i "s/<user>/$user/g" $file
+sed -i "s/<project_path>/$project_path_esc/g" $file
+sed -i "s/<saves_path>/$saves_path_esc/g" $file
+sed -i "s/<port>/$port/g" $file
 
 echo -e "${vertclair}Les modifications ont correctement été effectuées ! ${neutre}"
